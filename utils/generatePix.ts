@@ -9,15 +9,8 @@ interface PixConfig {
 
 // Implementação de PIX Copia e Cola
 export function generatePixCode(config: PixConfig): string {
-  // Se tiver um código PIX pré-gerado, use-o
   if (config.preGeneratedCode) {
-    return config.preGeneratedCode;
+    return config.preGeneratedCode; // Só retorna o código EMV puro!
   }
-  
-  // Caso contrário, use a versão simplificada como fallback
-  return `PIX para: ${config.merchantName}
-Chave PIX: ${config.pixKey}
-Valor: R$ ${config.amount.toFixed(2)}
-Identificador: ${config.txid || `INS${Date.now()}`}
-Cidade: ${config.merchantCity}`;
+  return '';
 } 
