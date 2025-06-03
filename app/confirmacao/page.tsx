@@ -26,7 +26,7 @@ function ConfirmacaoContent() {
   const pixKey = process.env.NEXT_PUBLIC_PIX_KEY || 'email@exemplo.com';
   const pixName = process.env.NEXT_PUBLIC_PIX_NAME || 'Nome do Recebedor';
   const pixCity = process.env.NEXT_PUBLIC_PIX_CITY || 'São Paulo';
-  const pixValue = 50; // Valor da inscrição em reais
+  const pixValue = 300; // Valor da inscrição em reais
   const preGeneratedPixCode = process.env.NEXT_PUBLIC_PIX_CODE || ''; // Código PIX pré-gerado
   
   // Gerar código PIX copia e cola válido
