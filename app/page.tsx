@@ -21,9 +21,9 @@ const escolas = [
 ];
 
 const baterias = [
-  { horario: '8h às 9h15', vagas: 17 },
-  { horario: '9h30 às 10h45', vagas: 17 },
-  { horario: '11h às 12h15', vagas: 16 },
+  { nome: 'Bateria 1', horario: '8h às 9h15', vagas: 17 },
+  { nome: 'Bateria 2', horario: '9h30 às 10h45', vagas: 17 },
+  { nome: 'Bateria 3', horario: '11h às 12h15', vagas: 16 },
 ];
 
 const tamanhosCamiseta = ['PP', 'P', 'M', 'G', 'GG', 'XGG'];
@@ -202,7 +202,7 @@ export default function Home() {
                 <option value="" className="text-gray-900">Selecione um horário</option>
                 {baterias.map((bateria) => (
                   <option key={bateria.horario} value={bateria.horario} className="text-gray-900">
-                    {bateria.horario} (máx. {bateria.vagas} vagas)
+                    {bateria.nome} - {bateria.horario} (máx. {bateria.vagas} vagas)
                   </option>
                 ))}
               </select>

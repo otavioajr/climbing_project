@@ -1,6 +1,10 @@
 'use client';
 
+// Usar configurações de renderização dinâmica
+import './config';
+
 import { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 
 interface Inscricao {
   _id: string;
@@ -75,6 +79,65 @@ export default function Admin() {
     return inscricoes.filter(i => i.bateria === bateria).length;
   };
 
+  // Mapeamento de horários para nomes de baterias
+  const mapearBateriaNome = (horario: string): string => {
+    switch (horario) {
+      case '8h às 9h15':
+        return 'Bateria 1: 8h às 9h15';
+      case '9h30 às 10h45':
+        return 'Bateria 2: 9h30 às 10h45';
+      case '11h às 12h15':
+        return 'Bateria 3: 11h às 12h15';
+      default:
+        return horario;
+    }
+  };
+
+  // Função para exportar para Excel
+  const exportarParaExcel = () => {
+    // Formatar dados para exportação
+    const dadosParaExportar = inscricoes.map(inscricao => ({
+      'Número': inscricao.numeroInscricao,
+      'Aluno': inscricao.nomeAluno,
+      'Responsável': inscricao.nomeResponsavel,
+      'Telefone': inscricao.telefone,
+      'Data de Nascimento': formatDate(inscricao.dataNascimento),
+      'Escola': inscricao.escola,
+      'Bateria': mapearBateriaNome(inscricao.bateria),
+      'Tamanho da Camiseta': inscricao.tamanhoCamiseta,
+      'Nome na Camiseta': inscricao.nomeCamiseta,
+      'Status': inscricao.status,
+      'Data de Inscrição': formatDate(inscricao.criadoEm)
+    }));
+
+    // Criar planilha
+    const workSheet = XLSX.utils.json_to_sheet(dadosParaExportar);
+    
+    // Ajustar largura das colunas
+    const wscols = [
+      { wch: 10 }, // Número
+      { wch: 25 }, // Aluno
+      { wch: 25 }, // Responsável
+      { wch: 15 }, // Telefone
+      { wch: 15 }, // Data Nascimento
+      { wch: 20 }, // Escola
+      { wch: 15 }, // Bateria
+      { wch: 15 }, // Tamanho Camiseta
+      { wch: 20 }, // Nome Camiseta
+      { wch: 10 }, // Status
+      { wch: 15 }, // Data Inscrição
+    ];
+    workSheet['!cols'] = wscols;
+
+    // Criar pasta de trabalho
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, 'Inscrições');
+    
+    // Gerar arquivo e iniciar download
+    const dataAtual = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(workBook, `inscricoes_${dataAtual}.xlsx`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -86,9 +149,20 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Painel Administrativo
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Painel Administrativo
+          </h1>
+          <button
+            onClick={exportarParaExcel}
+            className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md flex items-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Exportar para Excel
+          </button>
+        </div>
 
         {/* Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -97,15 +171,15 @@ export default function Admin() {
             <p className="text-2xl font-bold text-gray-900">{inscricoes.length}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">8h às 9h15</h3>
+            <h3 className="text-sm font-medium text-gray-500">Bateria 1: 8h às 9h15</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('8h às 9h15')}/17</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">9h30 às 10h45</h3>
+            <h3 className="text-sm font-medium text-gray-500">Bateria 2: 9h30 às 10h45</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('9h30 às 10h45')}/17</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">11h às 12h15</h3>
+            <h3 className="text-sm font-medium text-gray-500">Bateria 3: 11h às 12h15</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('11h às 12h15')}/16</p>
           </div>
         </div>
@@ -152,7 +226,7 @@ export default function Admin() {
                       {inscricao.nomeResponsavel}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {inscricao.bateria}
+                      {mapearBateriaNome(inscricao.bateria)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -218,7 +292,7 @@ export default function Admin() {
                   <strong>Escola:</strong> {selectedInscricao.escola}
                 </p>
                 <p className="text-sm text-gray-500">
-                  <strong>Bateria:</strong> {selectedInscricao.bateria}
+                  <strong>Bateria:</strong> {mapearBateriaNome(selectedInscricao.bateria)}
                 </p>
                 <p className="text-sm text-gray-500">
                   <strong>Tamanho da Camiseta:</strong> {selectedInscricao.tamanhoCamiseta}
