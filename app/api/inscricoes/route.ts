@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Inscricao from '@/models/Inscricao';
 
-// Função para gerar número de inscrição único
-function gerarNumeroInscricao() {
-  return Math.random().toString(36).substring(2, 9).toUpperCase();
+// Função para gerar número de inscrição sequencial
+async function gerarNumeroInscricaoSequencial() {
+  // Busca o maior número já cadastrado
+  const ultima = await Inscricao.findOne({}, {}, { sort: { numeroInscricao: -1 } });
+  let proximoNumero = 1;
+  if (ultima && !isNaN(Number(ultima.numeroInscricao))) {
+    proximoNumero = Number(ultima.numeroInscricao) + 1;
+  }
+  // Retorna com padding de zeros à esquerda
+  return proximoNumero.toString().padStart(4, '0');
 }
 
 // Função para verificar vagas disponíveis na bateria
@@ -48,13 +55,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Gerar número de inscrição único
+    // Gerar número de inscrição único sequencial
     let numeroInscricao;
     let inscricaoExiste = true;
-    
     while (inscricaoExiste) {
-      numeroInscricao = gerarNumeroInscricao();
+      numeroInscricao = await gerarNumeroInscricaoSequencial();
       inscricaoExiste = !!(await Inscricao.findOne({ numeroInscricao }));
+      if (inscricaoExiste) {
+        // Se já existe, incrementa manualmente
+        numeroInscricao = (Number(numeroInscricao) + 1).toString().padStart(4, '0');
+        inscricaoExiste = !!(await Inscricao.findOne({ numeroInscricao }));
+      }
     }
 
     // Criar nova inscrição

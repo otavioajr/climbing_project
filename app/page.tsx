@@ -202,7 +202,7 @@ export default function Home() {
                 <option value="" className="text-gray-900">Selecione um horário</option>
                 {baterias.map((bateria) => (
                   <option key={bateria.horario} value={bateria.horario} className="text-gray-900">
-                    {bateria.nome} - {bateria.horario} (máx. {bateria.vagas} vagas)
+                    {bateria.nome} - {bateria.horario}
                   </option>
                 ))}
               </select>

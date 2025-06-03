@@ -68,6 +68,25 @@ export default function Admin() {
     }
   };
 
+  const desconfirmarPagamento = async (inscricaoId: string) => {
+    try {
+      const response = await fetch(`/api/inscricoes/${inscricaoId}/desconfirmar-pagamento`, {
+        method: 'PUT',
+      });
+
+      if (response.ok) {
+        alert('Pagamento desconfirmado com sucesso!');
+        fetchInscricoes();
+        setShowModal(false);
+      } else {
+        alert('Erro ao desconfirmar pagamento');
+      }
+    } catch (error) {
+      console.error('Erro ao desconfirmar pagamento:', error);
+      alert('Erro ao desconfirmar pagamento');
+    }
+  };
+
   const verDetalhes = (inscricao: Inscricao) => {
     setSelectedInscricao(inscricao);
     setShowModal(true);
@@ -169,7 +188,7 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-full mx-auto px-2 lg:px-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             Painel Administrativo
@@ -283,20 +302,30 @@ export default function Admin() {
                       {formatDate(inscricao.criadoEm)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        onClick={() => verDetalhes(inscricao)}
-                        className="text-indigo-600 hover:text-indigo-900 mr-3"
-                      >
-                        Detalhes
-                      </button>
-                      {inscricao.status === 'pendente' && (
+                      <div className="flex flex-nowrap gap-3 items-center">
                         <button
-                          onClick={() => confirmarPagamento(inscricao._id)}
-                          className="text-green-600 hover:text-green-900"
+                          onClick={() => verDetalhes(inscricao)}
+                          className="text-indigo-600 hover:text-indigo-900"
                         >
-                          Confirmar Pagamento
+                          Detalhes
                         </button>
-                      )}
+                        {inscricao.status === 'pendente' && (
+                          <button
+                            onClick={() => confirmarPagamento(inscricao._id)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Confirmar Pagamento
+                          </button>
+                        )}
+                        {inscricao.status === 'pago' && (
+                          <button
+                            onClick={() => desconfirmarPagamento(inscricao._id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Desconfirmar Pagamento
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
