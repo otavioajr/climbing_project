@@ -22,7 +22,8 @@ export default function Confirmacao() {
   const pixKey = process.env.NEXT_PUBLIC_PIX_KEY || 'email@exemplo.com';
   const pixName = process.env.NEXT_PUBLIC_PIX_NAME || 'Nome do Recebedor';
   const pixCity = process.env.NEXT_PUBLIC_PIX_CITY || 'São Paulo';
-  const pixValue = 150; // Valor da inscrição em reais
+  const pixValue = 50; // Valor da inscrição em reais
+  const preGeneratedPixCode = process.env.NEXT_PUBLIC_PIX_CODE || ''; // Código PIX pré-gerado
   
   // Gerar código PIX copia e cola válido
   const pixCode = inscricao ? generatePixCode({
@@ -30,7 +31,8 @@ export default function Confirmacao() {
     merchantName: pixName,
     merchantCity: pixCity,
     amount: pixValue,
-    txid: inscricao.numeroInscricao
+    txid: inscricao.numeroInscricao,
+    preGeneratedCode: preGeneratedPixCode
   }) : '';
 
   useEffect(() => {
@@ -126,7 +128,7 @@ export default function Confirmacao() {
 
               <div>
                 <h3 className="text-lg font-medium text-gray-700 mb-4">PIX Copia e Cola</h3>
-                <div className="bg-gray-100 p-4 rounded-lg break-all text-sm font-mono">
+                <div className="bg-gray-100 p-4 rounded-lg text-sm font-mono text-gray-900 whitespace-pre-wrap overflow-auto max-h-64">
                   {pixCode}
                 </div>
                 <button

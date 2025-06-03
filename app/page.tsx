@@ -116,7 +116,7 @@ export default function Home() {
                 required
                 value={formData.nomeResponsavel}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               />
             </div>
 
@@ -132,7 +132,7 @@ export default function Home() {
                 value={formData.telefone}
                 onChange={handleChange}
                 placeholder="(11) 99999-9999"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               />
             </div>
 
@@ -147,7 +147,7 @@ export default function Home() {
                 required
                 value={formData.nomeAluno}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               />
             </div>
 
@@ -162,7 +162,7 @@ export default function Home() {
                 required
                 value={formData.dataNascimento}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               />
             </div>
 
@@ -176,11 +176,11 @@ export default function Home() {
                 required
                 value={formData.escola}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               >
-                <option value="">Selecione uma escola</option>
+                <option value="" className="text-gray-900">Selecione uma escola</option>
                 {escolas.map((escola) => (
-                  <option key={escola} value={escola}>
+                  <option key={escola} value={escola} className="text-gray-900">
                     {escola}
                   </option>
                 ))}
@@ -197,11 +197,11 @@ export default function Home() {
                 required
                 value={formData.bateria}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               >
-                <option value="">Selecione um horário</option>
+                <option value="" className="text-gray-900">Selecione um horário</option>
                 {baterias.map((bateria) => (
-                  <option key={bateria.horario} value={bateria.horario}>
+                  <option key={bateria.horario} value={bateria.horario} className="text-gray-900">
                     {bateria.horario} (máx. {bateria.vagas} vagas)
                   </option>
                 ))}
@@ -218,11 +218,11 @@ export default function Home() {
                 required
                 value={formData.tamanhoCamiseta}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               >
-                <option value="">Selecione um tamanho</option>
+                <option value="" className="text-gray-900">Selecione um tamanho</option>
                 {tamanhosCamiseta.map((tamanho) => (
-                  <option key={tamanho} value={tamanho}>
+                  <option key={tamanho} value={tamanho} className="text-gray-900">
                     {tamanho}
                   </option>
                 ))}
@@ -240,7 +240,7 @@ export default function Home() {
                 required
                 value={formData.nomeCamiseta}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-gray-900"
               />
             </div>
 
