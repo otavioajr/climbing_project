@@ -104,11 +104,16 @@ function ConfirmacaoContent() {
               </svg>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Inscrição Realizada com Sucesso!
+              Inscrição realizada
             </h1>
             <p className="text-gray-600">
               Guarde o número da sua inscrição e realize o pagamento
             </p>
+            <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p className="text-sm text-yellow-800">
+                <strong>Importante:</strong> Após realizar o pagamento, aguarde a confirmação.
+              </p>
+            </div>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-6 mb-8">
@@ -124,7 +129,7 @@ function ConfirmacaoContent() {
               Pagamento via PIX
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-8 sm:grid-cols-1 grid-cols-1">
               <div className="text-center">
                 <h3 className="text-lg font-medium text-gray-700 mb-4">QR Code PIX</h3>
                 <div className="bg-white p-4 rounded-lg border inline-block">
@@ -137,7 +142,7 @@ function ConfirmacaoContent() {
 
               <div>
                 <h3 className="text-lg font-medium text-gray-700 mb-4">PIX Copia e Cola</h3>
-                <div className="bg-gray-100 p-4 rounded-lg text-sm font-mono text-gray-900 whitespace-pre-wrap overflow-auto max-h-64">
+                <div className="bg-gray-100 p-4 rounded-lg text-sm font-mono text-gray-900 whitespace-pre-wrap overflow-auto max-h-64 break-words break-all">
                   {pixCode}
                 </div>
                 <button
@@ -149,17 +154,15 @@ function ConfirmacaoContent() {
               </div>
             </div>
 
-            <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-800">
-                <strong>Importante:</strong> Após realizar o pagamento, aguarde a confirmação. 
-                Você receberá uma notificação quando o pagamento for processado.
-              </p>
-            </div>
-
             <div className="mt-6 text-center">
               <p className="text-lg font-semibold text-gray-700">
                 Valor da Inscrição: R$ {pixValue.toFixed(2).replace('.', ',')}
               </p>
+              <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4 inline-block">
+                <p className="text-sm text-yellow-800">
+                  <strong>Importante:</strong> Após realizar o pagamento, aguarde a confirmação.
+                </p>
+              </div>
             </div>
           </div>
         </div>
