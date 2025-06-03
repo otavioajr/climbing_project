@@ -73,7 +73,7 @@ export default function Home() {
       } else {
         alert(data.error || 'Erro ao realizar inscrição');
       }
-    } catch (error) {
+    } catch {
       alert('Erro ao realizar inscrição. Tente novamente.');
     } finally {
       setLoading(false);

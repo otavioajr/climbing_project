@@ -8,10 +8,26 @@ if (!MONGODB_URI) {
   );
 }
 
-let cached = (global as any).mongoose;
+// Definir uma tipagem mais simples para o cache
+interface CachedConnection {
+  conn: mongoose.Connection | null;
+  promise: Promise<mongoose.Connection> | null;
+}
 
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+// Escopo global para o cache
+const globalMongo = global as unknown as {
+  mongoose?: CachedConnection;
+};
+
+// Usar valor existente ou inicializar
+const cached: CachedConnection = globalMongo.mongoose || { 
+  conn: null, 
+  promise: null 
+};
+
+// Armazenar no escopo global
+if (!globalMongo.mongoose) {
+  globalMongo.mongoose = cached;
 }
 
 async function dbConnect() {
@@ -24,7 +40,7 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts);
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then(mongoose => mongoose.connection);
   }
 
   try {

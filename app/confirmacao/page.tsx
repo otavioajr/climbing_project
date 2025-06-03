@@ -1,6 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+// Usar configurações de renderização dinâmica
+import './config';
+
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { QRCode } from 'react-qrcode';
 import { generatePixCode } from '@/utils/generatePix';
@@ -12,9 +15,10 @@ interface Inscricao {
   status: string;
 }
 
-export default function Confirmacao() {
+// Componente principal que usa useSearchParams
+function ConfirmacaoContent() {
   const searchParams = useSearchParams();
-  const numeroInscricao = searchParams.get('id');
+  const numeroInscricao = searchParams?.get('id') || '';
   const [inscricao, setInscricao] = useState<Inscricao | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,13 +39,12 @@ export default function Confirmacao() {
     preGeneratedCode: preGeneratedPixCode
   }) : '';
 
-  useEffect(() => {
-    if (numeroInscricao) {
-      fetchInscricao();
+  const fetchInscricao = useCallback(async () => {
+    if (!numeroInscricao) {
+      setLoading(false);
+      return;
     }
-  }, [numeroInscricao]);
-
-  const fetchInscricao = async () => {
+    
     try {
       // Tenta primeiro a API real, se falhar tenta a API mock
       let response = await fetch(`/api/inscricoes?id=${numeroInscricao}`);
@@ -61,7 +64,13 @@ export default function Confirmacao() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [numeroInscricao]);
+
+  useEffect(() => {
+    if (numeroInscricao) {
+      fetchInscricao();
+    }
+  }, [numeroInscricao, fetchInscricao]);
 
   const copiarPixCode = () => {
     navigator.clipboard.writeText(pixCode);
@@ -156,5 +165,23 @@ export default function Confirmacao() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Componente de fallback para quando o Suspense está carregando
+function ConfirmacaoLoading() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <p className="text-gray-600">Carregando dados da inscrição...</p>
+    </div>
+  );
+}
+
+// Exportar o componente principal envolvido em Suspense
+export default function Confirmacao() {
+  return (
+    <Suspense fallback={<ConfirmacaoLoading />}>
+      <ConfirmacaoContent />
+    </Suspense>
   );
 } 

@@ -1,7 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Definir o tipo para a inscrição
+interface Inscricao {
+  _id: string;
+  numeroInscricao: string;
+  nomeResponsavel: string;
+  telefone: string;
+  nomeAluno: string;
+  dataNascimento: string;
+  escola: string;
+  bateria: string;
+  tamanhoCamiseta: string;
+  nomeCamiseta: string;
+  status: 'pendente' | 'pago';
+  criadoEm: string;
+}
+
 // Armazenamento temporário em memória (será perdido ao reiniciar)
-let inscricoes: any[] = [];
+const inscricoes: Inscricao[] = [];
 
 function gerarNumeroInscricao() {
   return Math.random().toString(36).substring(2, 9).toUpperCase();
@@ -15,7 +31,7 @@ export async function POST(request: NextRequest) {
     const numeroInscricao = gerarNumeroInscricao();
     
     // Criar inscrição mock
-    const novaInscricao = {
+    const novaInscricao: Inscricao = {
       _id: Date.now().toString(),
       numeroInscricao,
       ...body,
@@ -29,7 +45,7 @@ export async function POST(request: NextRequest) {
       success: true,
       numeroInscricao,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Erro ao processar inscrição' },
       { status: 500 }
