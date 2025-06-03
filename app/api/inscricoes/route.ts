@@ -55,6 +55,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validação: não permitir o mesmo aluno na mesma escola
+    const alunoJaInscrito = await Inscricao.findOne({ nomeAluno, escola });
+    if (alunoJaInscrito) {
+      return NextResponse.json(
+        { error: 'Este aluno já está inscrito nesta escola.' },
+        { status: 400 }
+      );
+    }
+
     // Gerar número de inscrição único sequencial
     let numeroInscricao;
     let inscricaoExiste = true;
