@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { QRCode } from 'react-qrcode';
+import { generatePixCode } from '@/utils/generatePix';
 
 interface Inscricao {
   numeroInscricao: string;
@@ -20,10 +21,17 @@ export default function Confirmacao() {
   // Informações PIX (você deve substituir com as suas)
   const pixKey = process.env.NEXT_PUBLIC_PIX_KEY || 'email@exemplo.com';
   const pixName = process.env.NEXT_PUBLIC_PIX_NAME || 'Nome do Recebedor';
+  const pixCity = process.env.NEXT_PUBLIC_PIX_CITY || 'São Paulo';
   const pixValue = 150; // Valor da inscrição em reais
   
-  // Gerar código PIX copia e cola
-  const pixCode = `00020126360014BR.GOV.BCB.PIX0114${pixKey}5204000053039865406${pixValue.toFixed(2)}5802BR5913${pixName}6009SAO PAULO62140510${numeroInscricao}6304`;
+  // Gerar código PIX copia e cola válido
+  const pixCode = inscricao ? generatePixCode({
+    pixKey: pixKey,
+    merchantName: pixName,
+    merchantCity: pixCity,
+    amount: pixValue,
+    txid: inscricao.numeroInscricao
+  }) : '';
 
   useEffect(() => {
     if (numeroInscricao) {
