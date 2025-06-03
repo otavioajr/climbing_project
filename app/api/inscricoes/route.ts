@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       nomeResponsavel,
       telefone,
       nomeAluno,
-      dataNascimento: new Date(dataNascimento),
+      dataNascimento: new Date(dataNascimento + 'T00:00:00'),
       escola,
       bateria,
       tamanhoCamiseta,

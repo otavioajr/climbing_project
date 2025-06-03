@@ -3,7 +3,7 @@
 // Usar configurações de renderização dinâmica
 import './config';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as XLSX from 'xlsx';
 
 interface Inscricao {
@@ -26,6 +26,9 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [selectedInscricao, setSelectedInscricao] = useState<Inscricao | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchInscricoes();
@@ -138,6 +141,24 @@ export default function Admin() {
     XLSX.writeFile(workBook, `inscricoes_${dataAtual}.xlsx`);
   };
 
+  // Filtrar inscrições conforme o termo de busca
+  const inscricoesFiltradas = inscricoes.filter((inscricao) => {
+    const termo = searchTerm.toLowerCase();
+    return (
+      inscricao.nomeAluno.toLowerCase().includes(termo) ||
+      inscricao.nomeResponsavel.toLowerCase().includes(termo) ||
+      inscricao.numeroInscricao.toLowerCase().includes(termo)
+    );
+  });
+
+  // Focar no input ao abrir a busca
+  const handleLupaClick = () => {
+    setSearchOpen((prev) => !prev);
+    setTimeout(() => {
+      if (searchInputRef.current) searchInputRef.current.focus();
+    }, 100);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -153,15 +174,36 @@ export default function Admin() {
           <h1 className="text-3xl font-bold text-gray-900">
             Painel Administrativo
           </h1>
-          <button
-            onClick={exportarParaExcel}
-            className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md flex items-center"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Exportar para Excel
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleLupaClick}
+              className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              title="Buscar inscrição"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4-4m0 0A7 7 0 104 4a7 7 0 0013 13z" />
+              </svg>
+            </button>
+            {searchOpen && (
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                placeholder="Buscar aluno, responsável ou número..."
+                className="ml-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all w-72"
+              />
+            )}
+            <button
+              onClick={exportarParaExcel}
+              className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md flex items-center ml-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Exportar para Excel
+            </button>
+          </div>
         </div>
 
         {/* Estatísticas */}
@@ -214,7 +256,7 @@ export default function Admin() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {inscricoes.map((inscricao) => (
+                {inscricoesFiltradas.map((inscricao) => (
                   <tr key={inscricao._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {inscricao.numeroInscricao}
