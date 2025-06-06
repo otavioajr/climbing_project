@@ -219,17 +219,28 @@ export default function Admin() {
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-full mx-auto px-2 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 bg-white bg-opacity-80 px-4 py-2 rounded-lg">
-            Painel Administrativo
-          </h1>
-          <div className="flex items-center gap-2">
+        <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="flex flex-col md:flex-row justify-between items-center mb-8 p-4 rounded-2xl backdrop-blur-sm gap-4">
+          {/* Logo no canto superior esquerdo */}
+          <div className="flex items-center">
+            <div className="w-16 h-16 mr-4">
+              <img 
+                src="/images/logo-principal.png" 
+                alt="Climbing Adventure 2023" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-custom-pink uppercase">
+              Painel Administrativo
+            </h1>
+          </div>
+          
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <button
               onClick={handleLupaClick}
-              className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="p-2 rounded-full hover:bg-custom-yellow focus:outline-none focus:ring-2 focus:ring-custom-yellow bg-custom-yellow"
               title="Buscar inscrição"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4-4m0 0A7 7 0 104 4a7 7 0 0013 13z" />
               </svg>
             </button>
@@ -239,123 +250,123 @@ export default function Admin() {
                 type="text"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                placeholder="Buscar aluno, responsável ou número..."
-                className="ml-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all w-72 text-gray-900"
+                placeholder="Buscar..."
+                className="ml-2 px-3 py-2 border border-custom-yellow rounded-full focus:outline-none focus:ring-2 focus:ring-custom-yellow transition-all w-full md:w-72 text-gray-900 bg-custom-yellow bg-opacity-50"
               />
             )}
             <button
               onClick={exportarParaExcel}
-              className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md flex items-center ml-2"
+              className="bg-custom-orange hover:bg-custom-orange text-gray-900 font-bold py-2 px-4 rounded-full border-2 border-custom-orange flex items-center uppercase"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Exportar para Excel
+              Exportar
             </button>
           </div>
         </div>
 
         {/* Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-500">Total de Inscrições</h3>
+          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+            <h3 className="text-sm font-medium text-gray-900 uppercase">Total de Inscrições</h3>
             <p className="text-2xl font-bold text-gray-900">{inscricoes.length}</p>
           </div>
-          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-500">Bateria 1: 8h às 9h</h3>
+          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+            <h3 className="text-sm font-medium text-gray-900 uppercase">Bateria 1: 8h às 9h</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('8h às 9h') + contarPorBateria('8h às 9h15')}/17</p>
-            <p className="text-xs text-gray-500 mt-1">Números 0001-0017</p>
+            <p className="text-xs text-gray-700 mt-1">Números 0001-0017</p>
           </div>
-          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-500">Bateria 2: 9h30 às 10h30</h3>
+          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+            <h3 className="text-sm font-medium text-gray-900 uppercase">Bateria 2: 9h30 às 10h30</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('9h30 às 10h30') + contarPorBateria('9h30 às 10h45')}/17</p>
-            <p className="text-xs text-gray-500 mt-1">Números 0018-0035</p>
+            <p className="text-xs text-gray-700 mt-1">Números 0018-0034</p>
           </div>
-          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-500">Bateria 3: 11h às 12h</h3>
+          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+            <h3 className="text-sm font-medium text-gray-900 uppercase">Bateria 3: 11h às 12h</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('11h às 12h') + contarPorBateria('11h às 12h15')}/16</p>
-            <p className="text-xs text-gray-500 mt-1">Números 0036-0050</p>
+            <p className="text-xs text-gray-700 mt-1">Números 0035-0050</p>
           </div>
         </div>
 
         {/* Tabela de inscrições */}
-        <div className="bg-white backdrop-blur-sm bg-opacity-90 shadow-xl rounded-lg overflow-hidden">
+        <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-custom-yellow">
+              <thead className="bg-custom-yellow">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Número
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Aluno
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Responsável
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Bateria
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Data
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Ações
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-custom-yellow bg-opacity-50 divide-y divide-custom-yellow">
                 {inscricoesFiltradas.map((inscricao) => (
                   <tr key={inscricao._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {inscricao.numeroInscricao}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {inscricao.nomeAluno}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {inscricao.nomeResponsavel}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {mapearBateriaNome(inscricao.bateria)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         inscricao.status === 'pago' 
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                          ? 'bg-green-500 text-white'
+                          : 'bg-orange-500 text-white'
                       }`}>
                         {inscricao.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {formatDate(inscricao.criadoEm)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex flex-nowrap gap-3 items-center">
                         <button
                           onClick={() => verDetalhes(inscricao)}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-gray-900 bg-custom-yellow px-2 py-1 rounded-full hover:bg-custom-yellow font-medium text-xs"
                         >
                           Detalhes
                         </button>
                         {inscricao.status === 'pendente' && (
                           <button
                             onClick={() => confirmarPagamento(inscricao._id)}
-                            className="text-green-600 hover:text-green-900"
+                            className="text-white bg-green-500 px-2 py-1 rounded-full hover:bg-green-600 font-medium text-xs"
                           >
-                            Confirmar Pagamento
+                            Confirmar
                           </button>
                         )}
                         {inscricao.status === 'pago' && (
                           <button
                             onClick={() => desconfirmarPagamento(inscricao._id)}
-                            className="text-red-600 hover:text-red-900"
+                            className="text-white bg-orange-500 px-2 py-1 rounded-full hover:bg-orange-600 font-medium text-xs"
                           >
-                            Desconfirmar Pagamento
+                            Desconfirmar
                           </button>
                         )}
                       </div>
@@ -371,56 +382,61 @@ export default function Admin() {
       {/* Modal de detalhes */}
       {showModal && selectedInscricao && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-2xl rounded-md bg-white border-gray-200">
+          <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="relative top-20 mx-auto p-5 border-2 border-custom-yellow w-96 shadow-2xl rounded-2xl backdrop-blur-sm">
             <div className="mt-3">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              <h3 className="text-lg leading-6 font-bold text-pink-600 mb-4 uppercase text-center">
                 Detalhes da Inscrição
               </h3>
-              <div className="mt-2 space-y-3">
-                <p className="text-sm text-gray-500">
-                  <strong>Número:</strong> {selectedInscricao.numeroInscricao}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Aluno:</strong> {selectedInscricao.nomeAluno}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Responsável:</strong> {selectedInscricao.nomeResponsavel}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Telefone:</strong> {selectedInscricao.telefone}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Data de Nascimento:</strong> {formatDate(selectedInscricao.dataNascimento)}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Escola:</strong> {selectedInscricao.escola}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Bateria:</strong> {mapearBateriaNome(selectedInscricao.bateria)}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Tamanho da Camiseta:</strong> {selectedInscricao.tamanhoCamiseta}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Nome na Camiseta:</strong> {selectedInscricao.nomeCamiseta}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Status:</strong> {selectedInscricao.status}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Data de Inscrição:</strong> {formatDate(selectedInscricao.criadoEm)}
-                </p>
+              <div className="bg-yellow-300 rounded-xl p-4">
+                <div className="mt-2 space-y-3">
+                  <p className="text-sm text-gray-900">
+                    <strong>Número:</strong> {selectedInscricao.numeroInscricao}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Aluno:</strong> {selectedInscricao.nomeAluno}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Responsável:</strong> {selectedInscricao.nomeResponsavel}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Telefone:</strong> {selectedInscricao.telefone}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Data de Nascimento:</strong> {formatDate(selectedInscricao.dataNascimento)}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Escola:</strong> {selectedInscricao.escola}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Bateria:</strong> {mapearBateriaNome(selectedInscricao.bateria)}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Tamanho da Camiseta:</strong> {selectedInscricao.tamanhoCamiseta}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Nome na Camiseta:</strong> {selectedInscricao.nomeCamiseta}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Status:</strong>{' '}
+                    <span className={`px-2 py-1 rounded-full text-white ${selectedInscricao.status === 'pago' ? 'bg-green-500' : 'bg-orange-500'}`}>
+                      {selectedInscricao.status}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Data de Inscrição:</strong> {formatDate(selectedInscricao.criadoEm)}
+                  </p>
+                </div>
               </div>
-              <div className="items-center px-4 py-3 space-y-2">
+              <div className="items-center px-4 py-3 space-y-2 mt-4">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  className="px-4 py-2 bg-yellow-300 text-gray-900 text-base font-bold rounded-full w-full shadow-sm hover:bg-yellow-400 focus:outline-none border-2 border-yellow-400 uppercase"
                 >
                   Fechar
                 </button>
                 <button
                   onClick={() => setShowConfirmDelete(true)}
-                  className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+                  className="px-4 py-2 bg-orange-500 text-white text-base font-bold rounded-full w-full shadow-sm hover:bg-orange-600 focus:outline-none border-2 border-orange-600 uppercase"
                 >
                   Descadastrar Aluno
                 </button>
@@ -432,30 +448,30 @@ export default function Admin() {
 
       {/* Modal de confirmação para deletar */}
       {showConfirmDelete && selectedInscricao && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+          <div style={{backgroundColor: 'rgba(82, 230, 31, 0.7)'}} className="relative top-20 mx-auto p-5 border-2 border-custom-orange w-96 shadow-2xl rounded-2xl backdrop-blur-sm">
             <div className="mt-3 text-center">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              <h3 className="text-lg leading-6 font-bold text-pink-600 mb-4 uppercase">
                 Confirmar Exclusão
               </h3>
-              <div className="mt-2 px-7 py-3">
-                <p className="text-sm text-gray-500">
+              <div className="mt-2 px-7 py-3 bg-yellow-300 rounded-xl">
+                <p className="text-sm text-gray-900">
                   Tem certeza que deseja descadastrar o aluno <strong>{selectedInscricao.nomeAluno}</strong>?
                 </p>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-gray-900 mt-2">
                   Esta ação não pode ser desfeita.
                 </p>
               </div>
-              <div className="items-center px-4 py-3 flex gap-2">
+              <div className="items-center px-4 py-3 flex gap-2 mt-4">
                 <button
                   onClick={() => setShowConfirmDelete(false)}
-                  className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md flex-1 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  className="px-4 py-2 bg-yellow-300 text-gray-900 text-base font-bold rounded-full flex-1 shadow-sm hover:bg-yellow-400 focus:outline-none border-2 border-yellow-400 uppercase"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={deletarInscricao}
-                  className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md flex-1 shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+                  className="px-4 py-2 bg-orange-500 text-white text-base font-bold rounded-full flex-1 shadow-sm hover:bg-orange-600 focus:outline-none border-2 border-orange-600 uppercase"
                 >
                   Confirmar
                 </button>

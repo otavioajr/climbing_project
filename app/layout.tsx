@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({ 
+  subsets: ["latin"],
+  variable: '--font-montserrat'
+});
+
+// Nota: A fonte Sailors precisará ser importada como fonte local
+// assumindo que estará na pasta public/fonts
 
 export const metadata: Metadata = {
   title: "Sistema de Inscrições",
@@ -21,7 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
+      <head>
+        {/* Adicionar fonte Sailors como fonte local */}
+        <link rel="stylesheet" href="/fonts/sailors/stylesheet.css" />
+      </head>
+      <body className={`${montserrat.variable} font-sans`}>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Carregando...</div>}>
           {children}
         </Suspense>

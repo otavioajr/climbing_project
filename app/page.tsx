@@ -83,7 +83,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto">
+      <div className="max-w-lg mx-auto">
         {/* Aviso de modo de teste */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 rounded-lg shadow-md">
@@ -100,10 +100,10 @@ export default function Home() {
           </div>
         )}
         
-        <div className="bg-green-500 shadow-xl rounded-3xl p-8 backdrop-blur-sm">
+        <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="shadow-xl rounded-3xl p-8 backdrop-blur-sm">
           {/* Logo no topo */}
-          <div className="flex justify-center mb-4">
-            <div className="w-48 h-48 flex items-center justify-center">
+          <div className="flex justify-center">
+            <div className="w-70 h-70 flex items-center justify-center">
               <img 
                 src="/images/logo-principal.png" 
                 alt="Climbing Adventure 2023" 
@@ -112,7 +112,7 @@ export default function Home() {
             </div>
           </div>
           
-          <h1 className="text-3xl font-bold text-pink-600 mb-8 text-center uppercase">
+          <h1 className="text-5xl font-bold text-custom-pink mb-8 text-center uppercase font-title">
             Festival de Escalada Escolar
           </h1>
 
@@ -128,7 +128,7 @@ export default function Home() {
                 required
                 value={formData.nomeResponsavel}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900"
               />
             </div>
 
@@ -144,7 +144,7 @@ export default function Home() {
                 value={formData.telefone}
                 onChange={handleChange}
                 placeholder="(11) 99999-9999"
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900"
               />
             </div>
 
@@ -159,7 +159,7 @@ export default function Home() {
                 required
                 value={formData.nomeAluno}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900"
               />
             </div>
 
@@ -174,7 +174,7 @@ export default function Home() {
                 required
                 value={formData.dataNascimento}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900"
               />
             </div>
 
@@ -188,7 +188,7 @@ export default function Home() {
                 required
                 value={formData.escola}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900 appearance-none"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900 appearance-none"
                 style={{ backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
               >
                 <option value="" className="text-gray-900">Selecione uma escola</option>
@@ -210,7 +210,7 @@ export default function Home() {
                 required
                 value={formData.bateria}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900 appearance-none"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900 appearance-none"
                 style={{ backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
               >
                 <option value="" className="text-gray-900">Selecione um horário</option>
@@ -237,6 +237,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </button>
+                <span className="text-xs text-gray-900">Clique no "?" para ver medidas</span>
               </div>
               <select
                 name="tamanhoCamiseta"
@@ -244,7 +245,7 @@ export default function Home() {
                 required
                 value={formData.tamanhoCamiseta}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900 appearance-none"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900 appearance-none"
                 style={{ backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
               >
                 <option value="" className="text-gray-900">Selecione um tamanho</option>
@@ -267,7 +268,7 @@ export default function Home() {
                 required
                 value={formData.nomeCamiseta}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-yellow-500 sm:text-sm p-3 bg-yellow-300 text-gray-900"
+                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900"
               />
             </div>
 
@@ -276,7 +277,7 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-2/3 flex justify-center py-3 px-6 border-2 border-orange-700 rounded-full shadow-lg text-base font-bold text-gray-900 bg-orange-500 hover:bg-orange-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase"
+                  className="w-2/3 flex justify-center py-3 px-6 border-2 border-custom-orange rounded-full shadow-lg text-base font-bold text-gray-900 bg-custom-orange hover:bg-custom-orange focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase"
                 >
                   {loading ? 'Processando...' : 'Continuar'}
                 </button>
@@ -293,9 +294,9 @@ export default function Home() {
             {/* Popup da tabela de medidas */}
             {showSizeChart && (
               <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded-lg shadow-2xl max-w-lg mx-auto border border-gray-200">
+                <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="p-6 rounded-lg shadow-2xl max-w-lg mx-auto border border-custom-yellow backdrop-blur-sm">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">Tabela de Medidas - Camiseta Infantil</h3>
+                    <h3 className="text-lg font-medium text-gray-900 uppercase">Tabela de Medidas - Camiseta Infantil</h3>
                     <button 
                       type="button" 
                       onClick={() => setShowSizeChart(false)}

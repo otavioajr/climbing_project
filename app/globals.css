@@ -3,13 +3,23 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Cores personalizadas */
+  --color-green: #52E61F;
+  --color-yellow: #F6DE10;
+  --color-pink: #E857E6;
+  --color-orange: #FC8304;
+  
+  /* Fontes */
+  --font-title: 'Sailors', sans-serif;
+  --font-body: var(--font-montserrat), sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-title: var(--font-title);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +32,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   position: relative;
 }
 
@@ -40,4 +50,42 @@ body::before {
   bottom: 0;
   opacity: 0.7;
   z-index: -1;
+}
+
+.font-title {
+  font-family: var(--font-title);
+}
+
+.bg-custom-green {
+  background-color: var(--color-green);
+}
+
+.bg-custom-yellow {
+  background-color: var(--color-yellow);
+}
+
+.bg-custom-orange {
+  background-color: var(--color-orange);
+}
+
+.text-custom-pink {
+  color: var(--color-pink);
+}
+
+.border-custom-yellow {
+  border-color: var(--color-yellow);
+}
+
+.border-custom-orange {
+  border-color: var(--color-orange);
+}
+
+.hover\:bg-custom-yellow:hover {
+  background-color: var(--color-yellow);
+  filter: brightness(0.95);
+}
+
+.hover\:bg-custom-orange:hover {
+  background-color: var(--color-orange);
+  filter: brightness(0.95);
 }

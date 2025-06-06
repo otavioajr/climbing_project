@@ -13,9 +13,9 @@ async function gerarNumeroInscricaoSequencial(bateria: string) {
     faixaFinal = 17;
   } else if (bateria === '9h30 às 10h30' || bateria === '9h30 às 10h45') { // Bateria 2
     faixaInicial = 18;
-    faixaFinal = 35;
+    faixaFinal = 34;
   } else if (bateria === '11h às 12h' || bateria === '11h às 12h15') { // Bateria 3
-    faixaInicial = 36;
+    faixaInicial = 35;
     faixaFinal = 50;
   } else {
     // Caso bateria não identificada, usar valores padrão (1-17)
