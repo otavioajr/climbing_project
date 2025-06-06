@@ -79,24 +79,24 @@ function ConfirmacaoContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">Carregando...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600 bg-white bg-opacity-80 p-4 rounded-lg shadow-md">Carregando...</p>
       </div>
     );
   }
 
   if (!inscricao) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-red-600">Inscrição não encontrada</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-600 bg-white bg-opacity-80 p-4 rounded-lg shadow-md">Inscrição não encontrada</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white shadow-xl rounded-lg p-8">
+        <div className="bg-white backdrop-blur-sm bg-opacity-90 shadow-xl rounded-lg p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,8 +174,8 @@ function ConfirmacaoContent() {
 // Componente de fallback para quando o Suspense está carregando
 function ConfirmacaoLoading() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-gray-600">Carregando dados da inscrição...</p>
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-600 bg-white bg-opacity-80 p-4 rounded-lg shadow-md">Carregando dados da inscrição...</p>
     </div>
   );
 }

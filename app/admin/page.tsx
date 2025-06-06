@@ -210,17 +210,17 @@ export default function Admin() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">Carregando...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600 bg-white bg-opacity-80 p-4 rounded-lg shadow-md">Carregando...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-full mx-auto px-2 lg:px-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 bg-white bg-opacity-80 px-4 py-2 rounded-lg">
             Painel Administrativo
           </h1>
           <div className="flex items-center gap-2">
@@ -257,21 +257,21 @@ export default function Admin() {
 
         {/* Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-500">Total de Inscrições</h3>
             <p className="text-2xl font-bold text-gray-900">{inscricoes.length}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-500">Bateria 1: 8h às 9h</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('8h às 9h') + contarPorBateria('8h às 9h15')}/17</p>
             <p className="text-xs text-gray-500 mt-1">Números 0001-0017</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-500">Bateria 2: 9h30 às 10h30</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('9h30 às 10h30') + contarPorBateria('9h30 às 10h45')}/17</p>
             <p className="text-xs text-gray-500 mt-1">Números 0018-0035</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white backdrop-blur-sm bg-opacity-90 rounded-lg shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-500">Bateria 3: 11h às 12h</h3>
             <p className="text-2xl font-bold text-gray-900">{contarPorBateria('11h às 12h') + contarPorBateria('11h às 12h15')}/16</p>
             <p className="text-xs text-gray-500 mt-1">Números 0036-0050</p>
@@ -279,7 +279,7 @@ export default function Admin() {
         </div>
 
         {/* Tabela de inscrições */}
-        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+        <div className="bg-white backdrop-blur-sm bg-opacity-90 shadow-xl rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -370,8 +370,8 @@ export default function Admin() {
 
       {/* Modal de detalhes */}
       {showModal && selectedInscricao && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-2xl rounded-md bg-white border-gray-200">
             <div className="mt-3">
               <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
                 Detalhes da Inscrição
