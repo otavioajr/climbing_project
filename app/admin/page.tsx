@@ -29,6 +29,7 @@ export default function Admin() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   useEffect(() => {
     fetchInscricoes();
@@ -104,12 +105,19 @@ export default function Admin() {
   // Mapeamento de horários para nomes de baterias
   const mapearBateriaNome = (horario: string): string => {
     switch (horario) {
+      case '8h às 9h':
+        return 'Bateria 1: 8h às 9h';
+      case '9h30 às 10h30':
+        return 'Bateria 2: 9h30 às 10h30';
+      case '11h às 12h':
+        return 'Bateria 3: 11h às 12h';
+      // Manter compatibilidade com registros antigos
       case '8h às 9h15':
-        return 'Bateria 1: 8h às 9h15';
+        return 'Bateria 1: 8h às 9h';
       case '9h30 às 10h45':
-        return 'Bateria 2: 9h30 às 10h45';
+        return 'Bateria 2: 9h30 às 10h30';
       case '11h às 12h15':
-        return 'Bateria 3: 11h às 12h15';
+        return 'Bateria 3: 11h às 12h';
       default:
         return horario;
     }
@@ -178,6 +186,28 @@ export default function Admin() {
     }, 100);
   };
 
+  const deletarInscricao = async () => {
+    if (!selectedInscricao) return;
+
+    try {
+      const response = await fetch(`/api/inscricoes/${selectedInscricao._id}/deletar`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        alert('Inscrição deletada com sucesso!');
+        fetchInscricoes();
+        setShowModal(false);
+        setShowConfirmDelete(false);
+      } else {
+        alert('Erro ao deletar inscrição');
+      }
+    } catch (error) {
+      console.error('Erro ao deletar inscrição:', error);
+      alert('Erro ao deletar inscrição');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -210,7 +240,7 @@ export default function Admin() {
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Buscar aluno, responsável ou número..."
-                className="ml-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all w-72"
+                className="ml-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all w-72 text-gray-900"
               />
             )}
             <button
@@ -232,16 +262,19 @@ export default function Admin() {
             <p className="text-2xl font-bold text-gray-900">{inscricoes.length}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Bateria 1: 8h às 9h15</h3>
-            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('8h às 9h15')}/17</p>
+            <h3 className="text-sm font-medium text-gray-500">Bateria 1: 8h às 9h</h3>
+            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('8h às 9h') + contarPorBateria('8h às 9h15')}/17</p>
+            <p className="text-xs text-gray-500 mt-1">Números 0001-0017</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Bateria 2: 9h30 às 10h45</h3>
-            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('9h30 às 10h45')}/17</p>
+            <h3 className="text-sm font-medium text-gray-500">Bateria 2: 9h30 às 10h30</h3>
+            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('9h30 às 10h30') + contarPorBateria('9h30 às 10h45')}/17</p>
+            <p className="text-xs text-gray-500 mt-1">Números 0018-0035</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-sm font-medium text-gray-500">Bateria 3: 11h às 12h15</h3>
-            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('11h às 12h15')}/16</p>
+            <h3 className="text-sm font-medium text-gray-500">Bateria 3: 11h às 12h</h3>
+            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('11h às 12h') + contarPorBateria('11h às 12h15')}/16</p>
+            <p className="text-xs text-gray-500 mt-1">Números 0036-0050</p>
           </div>
         </div>
 
@@ -378,12 +411,53 @@ export default function Admin() {
                   <strong>Data de Inscrição:</strong> {formatDate(selectedInscricao.criadoEm)}
                 </p>
               </div>
-              <div className="items-center px-4 py-3">
+              <div className="items-center px-4 py-3 space-y-2">
                 <button
                   onClick={() => setShowModal(false)}
                   className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
                 >
                   Fechar
+                </button>
+                <button
+                  onClick={() => setShowConfirmDelete(true)}
+                  className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+                >
+                  Descadastrar Aluno
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmação para deletar */}
+      {showConfirmDelete && selectedInscricao && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Confirmar Exclusão
+              </h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">
+                  Tem certeza que deseja descadastrar o aluno <strong>{selectedInscricao.nomeAluno}</strong>?
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Esta ação não pode ser desfeita.
+                </p>
+              </div>
+              <div className="items-center px-4 py-3 flex gap-2">
+                <button
+                  onClick={() => setShowConfirmDelete(false)}
+                  className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md flex-1 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={deletarInscricao}
+                  className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md flex-1 shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+                >
+                  Confirmar
                 </button>
               </div>
             </div>

@@ -4,29 +4,29 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const escolas = [
-  'Colégio Emilie',
   'Colégio 24 de maio',
   'Colégio Anglo Leonardo da Vinci',
-  'Colégio Dominus',
+  'Colégio Dominus Vivendi',
   'Colégio Elvira Brandão',
+  'Colégio Emilie de Villeneuve',
   'Colégio Magister',
-  'Colégio Magno',
+  'Colégio Magno/Mágico de Oz',
   'Colégio Nova Geração',
-  'Colégio Viva',
-  'Ekoa',
   'Escola Castanheiras',
   'Escola da Vila',
+  'Escola Viva',
+  'Espaço Ekoa',
   'Recreação João & Maria',
   'St. Nicholas School',
 ];
 
 const baterias = [
-  { nome: 'Bateria 1', horario: '8h às 9h15', vagas: 17 },
-  { nome: 'Bateria 2', horario: '9h30 às 10h45', vagas: 17 },
-  { nome: 'Bateria 3', horario: '11h às 12h15', vagas: 16 },
+  { nome: 'Bateria 1', horario: '8h às 9h', vagas: 17 },
+  { nome: 'Bateria 2', horario: '9h30 às 10h30', vagas: 17 },
+  { nome: 'Bateria 3', horario: '11h às 12h', vagas: 16 },
 ];
 
-const tamanhosCamiseta = ['PP', 'P', 'M', 'G', 'GG', 'XGG'];
+const tamanhosCamiseta = ['4', '6', '8', '10', '12'];
 
 export default function Home() {
   const router = useRouter();
@@ -42,6 +42,7 @@ export default function Home() {
   });
   const [loading, setLoading] = useState(false);
   const [useMockApi, setUseMockApi] = useState(false);
+  const [showSizeChart, setShowSizeChart] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -209,9 +210,22 @@ export default function Home() {
             </div>
 
             <div>
-              <label htmlFor="tamanhoCamiseta" className="block text-sm font-medium text-gray-700">
-                Tamanho da camiseta
-              </label>
+              <div className="flex items-center gap-2">
+                <label htmlFor="tamanhoCamiseta" className="block text-sm font-medium text-gray-700">
+                  Tamanho da camiseta
+                </label>
+                <button 
+                  type="button" 
+                  onClick={() => setShowSizeChart(true)}
+                  className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  title="Ver tabela de medidas"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+                <span className="text-xs text-gray-500">Clique no "?" para ver medidas</span>
+              </div>
               <select
                 name="tamanhoCamiseta"
                 id="tamanhoCamiseta"
@@ -253,6 +267,44 @@ export default function Home() {
                 {loading ? 'Processando...' : 'Realizar Inscrição'}
               </button>
             </div>
+
+            {/* Popup da tabela de medidas */}
+            {showSizeChart && (
+              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg mx-auto">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-gray-900">Tabela de Medidas - Camiseta Infantil</h3>
+                    <button 
+                      type="button" 
+                      onClick={() => setShowSizeChart(false)}
+                      className="text-gray-400 hover:text-gray-500"
+                    >
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="flex justify-center">
+                    <img 
+                      src="/images/tabela-medidas.jpg" 
+                      alt="Tabela de medidas de camiseta infantil"
+                      className="max-w-full h-auto"
+                    />
+                  </div>
+                  
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowSizeChart(false)}
+                      className="w-full inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </form>
         </div>
       </div>

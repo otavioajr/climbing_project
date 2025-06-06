@@ -107,11 +107,11 @@ function ConfirmacaoContent() {
               Inscrição realizada
             </h1>
             <p className="text-gray-600">
-              Guarde o número da sua inscrição e realize o pagamento
+              Guarde o número da sua inscrição para participar do sorteio no dia do festival
             </p>
             <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <p className="text-sm text-yellow-800">
-                <strong>Importante:</strong> Após realizar o pagamento, aguarde a confirmação.
+                <strong>Importante:</strong> A inscrição só é realizada mediante ao pagamento, aguarde a confirmação.
               </p>
             </div>
           </div>
@@ -160,7 +160,7 @@ function ConfirmacaoContent() {
               </p>
               <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4 inline-block">
                 <p className="text-sm text-yellow-800">
-                  <strong>Importante:</strong> Após realizar o pagamento, aguarde a confirmação.
+                  <strong>Importante:</strong> A inscrição só é realizada mediante ao pagamento, aguarde a confirmação.
                 </p>
               </div>
             </div>
