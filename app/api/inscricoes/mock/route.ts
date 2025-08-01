@@ -9,7 +9,6 @@ interface Inscricao {
   nomeAluno: string;
   dataNascimento: string;
   escola: string;
-  bateria: string;
   tamanhoCamiseta: string;
   nomeCamiseta: string;
   status: 'pendente' | 'pago';

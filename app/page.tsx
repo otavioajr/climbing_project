@@ -18,15 +18,10 @@ const escolas = [
   'Espaço Ekoa',
   'Recreação João & Maria',
   'St. Nicholas School',
+  'Outra',
 ];
 
-const baterias = [
-  { nome: 'Bateria 1', horario: '8h às 9h', vagas: 17 },
-  { nome: 'Bateria 2', horario: '9h30 às 10h30', vagas: 17 },
-  { nome: 'Bateria 3', horario: '11h às 12h', vagas: 16 },
-];
-
-const tamanhosCamiseta = ['4', '6', '8', '10', '12'];
+const tamanhosCamiseta = ['PP', 'P', 'M', 'G', 'GG', '3G', '4G', '5G'];
 
 export default function Home() {
   const router = useRouter();
@@ -36,35 +31,66 @@ export default function Home() {
     nomeAluno: '',
     dataNascimento: '',
     escola: '',
-    bateria: '',
+    escolaOutra: '',
     tamanhoCamiseta: '',
     nomeCamiseta: '',
+    autorizacaoImagem: false,
   });
   const [loading, setLoading] = useState(false);
   const [useMockApi, setUseMockApi] = useState(false);
   const [showSizeChart, setShowSizeChart] = useState(false);
+  const [showEscolaOutra, setShowEscolaOutra] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === 'checkbox' ? checked : value,
     });
+
+    // Mostrar/ocultar campo de escola personalizada
+    if (name === 'escola') {
+      if (value === 'Outra') {
+        setShowEscolaOutra(true);
+      } else {
+        setShowEscolaOutra(false);
+        setFormData(prev => ({ ...prev, escolaOutra: '' }));
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validação customizada para o checkbox de autorização
+    if (!formData.autorizacaoImagem) {
+      alert('⚠️ Por favor, marque a caixa de autorização de uso de imagem para prosseguir com a inscrição.');
+      return;
+    }
+    
     setLoading(true);
 
     try {
       // Use mock API se estiver em modo de teste
       const apiUrl = useMockApi ? '/api/inscricoes/mock' : '/api/inscricoes';
       
+      // Preparar dados para envio, usando escolaOutra se escola for "Outra"
+      const dadosParaEnvio = {
+        ...formData,
+        escola: formData.escola === 'Outra' ? formData.escolaOutra : formData.escola
+      };
+      
+      // Remover os campos que não devem ser enviados para a API
+      const { escolaOutra, autorizacaoImagem, ...dadosFinais } = dadosParaEnvio;
+      
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dadosFinais),
       });
 
       const data = await response.json();
@@ -116,7 +142,7 @@ export default function Home() {
             Festival de Escalada Escolar
           </h1>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" lang="pt-BR">
             <div>
               <label htmlFor="nomeResponsavel" className="block text-sm font-medium text-gray-900 uppercase">
                 Nome completo responsável
@@ -200,27 +226,24 @@ export default function Home() {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="bateria" className="block text-sm font-medium text-gray-900 uppercase">
-                Bateria
-              </label>
-              <select
-                name="bateria"
-                id="bateria"
-                required
-                value={formData.bateria}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900 appearance-none"
-                style={{ backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
-              >
-                <option value="" className="text-gray-900">Selecione um horário</option>
-                {baterias.map((bateria) => (
-                  <option key={bateria.horario} value={bateria.horario} className="text-gray-900">
-                    {bateria.nome} - {bateria.horario}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Campo para escola personalizada */}
+            {showEscolaOutra && (
+              <div>
+                <label htmlFor="escolaOutra" className="block text-sm font-medium text-gray-900 uppercase">
+                  Digite o nome da escola
+                </label>
+                <input
+                  type="text"
+                  name="escolaOutra"
+                  id="escolaOutra"
+                  required={formData.escola === 'Outra'}
+                  value={formData.escolaOutra}
+                  onChange={handleChange}
+                  placeholder="Nome da escola..."
+                  className="mt-1 block w-full rounded-full border-none shadow-sm focus:ring-2 focus:ring-custom-yellow sm:text-sm p-3 bg-custom-yellow text-gray-900"
+                />
+              </div>
+            )}
 
             <div>
               <div className="flex items-center gap-2">
@@ -272,11 +295,33 @@ export default function Home() {
               />
             </div>
 
+            {/* Checkbox de autorização de uso de imagem */}
+            <div className="pt-4">
+              <div className="flex items-start space-x-3">
+                <input
+                  type="checkbox"
+                  name="autorizacaoImagem"
+                  id="autorizacaoImagem"
+                  checked={formData.autorizacaoImagem}
+                  onChange={handleChange}
+                  className="mt-1 h-4 w-4 text-custom-orange focus:ring-custom-yellow border-gray-300 rounded flex-shrink-0"
+                />
+                <label htmlFor="autorizacaoImagem" className="text-xs text-gray-800 leading-relaxed">
+                  <span className="font-medium">Autorizo o uso da minha imagem e/ou da imagem do(a) menor sob minha responsabilidade para fins de divulgação neste site, redes sociais e materiais promocionais.</span>
+                  <br />
+                  <br />
+                  <span className="text-gray-700">
+                    Ao marcar esta opção, declaro estar ciente e de acordo com o uso das imagens conforme descrito na Política de Privacidade e nos Termos de Uso do site.
+                  </span>
+                </label>
+              </div>
+            </div>
+
             <div className="pt-6 flex items-center justify-between">
               <div className="flex-grow flex justify-center">
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !formData.autorizacaoImagem}
                   className="w-2/3 flex justify-center py-3 px-6 border-2 border-custom-orange rounded-full shadow-lg text-base font-bold text-gray-900 bg-custom-orange hover:bg-custom-orange focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase"
                 >
                   {loading ? 'Processando...' : 'Continuar'}
@@ -296,7 +341,7 @@ export default function Home() {
               <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50">
                 <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="p-6 rounded-lg shadow-2xl max-w-lg mx-auto border border-custom-yellow backdrop-blur-sm">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900 uppercase">Tabela de Medidas - Camiseta Infantil</h3>
+                    <h3 className="text-lg font-medium text-gray-900 uppercase">Tabela de Medidas - Camiseta Unissex</h3>
                     <button 
                       type="button" 
                       onClick={() => setShowSizeChart(false)}
@@ -311,7 +356,7 @@ export default function Home() {
                   <div className="flex justify-center">
                     <img 
                       src="/images/tabela-medidas.jpg" 
-                      alt="Tabela de medidas de camiseta infantil"
+                      alt="Tabela de medidas de camiseta unissex"
                       className="max-w-full h-auto"
                     />
                   </div>

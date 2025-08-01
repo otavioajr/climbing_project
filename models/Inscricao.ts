@@ -26,10 +26,6 @@ const InscricaoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  bateria: {
-    type: String,
-    required: true,
-  },
   tamanhoCamiseta: {
     type: String,
     required: true,
@@ -49,4 +45,9 @@ const InscricaoSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.models.Inscricao || mongoose.model('Inscricao', InscricaoSchema); 
+// Garantir que o modelo seja recriado sem cache
+if (mongoose.models.Inscricao) {
+  delete mongoose.models.Inscricao;
+}
+
+export default mongoose.model('Inscricao', InscricaoSchema); 

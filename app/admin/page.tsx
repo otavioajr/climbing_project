@@ -14,7 +14,6 @@ interface Inscricao {
   nomeAluno: string;
   dataNascimento: string;
   escola: string;
-  bateria: string;
   tamanhoCamiseta: string;
   nomeCamiseta: string;
   status: 'pendente' | 'pago';
@@ -97,32 +96,6 @@ export default function Admin() {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  // Contar inscrições por bateria
-  const contarPorBateria = (bateria: string) => {
-    return inscricoes.filter(i => i.bateria === bateria).length;
-  };
-
-  // Mapeamento de horários para nomes de baterias
-  const mapearBateriaNome = (horario: string): string => {
-    switch (horario) {
-      case '8h às 9h':
-        return 'Bateria 1: 8h às 9h';
-      case '9h30 às 10h30':
-        return 'Bateria 2: 9h30 às 10h30';
-      case '11h às 12h':
-        return 'Bateria 3: 11h às 12h';
-      // Manter compatibilidade com registros antigos
-      case '8h às 9h15':
-        return 'Bateria 1: 8h às 9h';
-      case '9h30 às 10h45':
-        return 'Bateria 2: 9h30 às 10h30';
-      case '11h às 12h15':
-        return 'Bateria 3: 11h às 12h';
-      default:
-        return horario;
-    }
-  };
-
   // Função para exportar para Excel
   const exportarParaExcel = () => {
     // Formatar dados para exportação
@@ -133,7 +106,6 @@ export default function Admin() {
       'Telefone': inscricao.telefone,
       'Data de Nascimento': formatDate(inscricao.dataNascimento),
       'Escola': inscricao.escola,
-      'Bateria': mapearBateriaNome(inscricao.bateria),
       'Tamanho da Camiseta': inscricao.tamanhoCamiseta,
       'Nome na Camiseta': inscricao.nomeCamiseta,
       'Status': inscricao.status,
@@ -151,7 +123,6 @@ export default function Admin() {
       { wch: 15 }, // Telefone
       { wch: 15 }, // Data Nascimento
       { wch: 20 }, // Escola
-      { wch: 15 }, // Bateria
       { wch: 15 }, // Tamanho Camiseta
       { wch: 20 }, // Nome Camiseta
       { wch: 10 }, // Status
@@ -267,25 +238,14 @@ export default function Admin() {
         </div>
 
         {/* Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-900 uppercase">Total de Inscrições</h3>
             <p className="text-2xl font-bold text-gray-900">{inscricoes.length}</p>
           </div>
           <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-900 uppercase">Bateria 1: 8h às 9h</h3>
-            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('8h às 9h') + contarPorBateria('8h às 9h15')}/17</p>
-            <p className="text-xs text-gray-700 mt-1">Números 0001-0017</p>
-          </div>
-          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-900 uppercase">Bateria 2: 9h30 às 10h30</h3>
-            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('9h30 às 10h30') + contarPorBateria('9h30 às 10h45')}/17</p>
-            <p className="text-xs text-gray-700 mt-1">Números 0018-0034</p>
-          </div>
-          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-900 uppercase">Bateria 3: 11h às 12h</h3>
-            <p className="text-2xl font-bold text-gray-900">{contarPorBateria('11h às 12h') + contarPorBateria('11h às 12h15')}/16</p>
-            <p className="text-xs text-gray-700 mt-1">Números 0035-0050</p>
+            <h3 className="text-sm font-medium text-gray-900 uppercase">Pagamentos Confirmados</h3>
+            <p className="text-2xl font-bold text-gray-900">{inscricoes.filter(i => i.status === 'pago').length}</p>
           </div>
         </div>
 
@@ -303,9 +263,6 @@ export default function Admin() {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Responsável
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
-                    Bateria
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
                     Status
@@ -329,9 +286,6 @@ export default function Admin() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {inscricao.nomeResponsavel}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {mapearBateriaNome(inscricao.bateria)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -406,9 +360,6 @@ export default function Admin() {
                   </p>
                   <p className="text-sm text-gray-900">
                     <strong>Escola:</strong> {selectedInscricao.escola}
-                  </p>
-                  <p className="text-sm text-gray-900">
-                    <strong>Bateria:</strong> {mapearBateriaNome(selectedInscricao.bateria)}
                   </p>
                   <p className="text-sm text-gray-900">
                     <strong>Tamanho da Camiseta:</strong> {selectedInscricao.tamanhoCamiseta}
