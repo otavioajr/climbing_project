@@ -41,6 +41,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validação: verificar limite de inscrições (máximo 50)
+    const totalInscricoes = await Inscricao.countDocuments();
+    if (totalInscricoes >= 50) {
+      return NextResponse.json(
+        { error: 'Não há mais vagas disponíveis. O limite de 50 inscrições foi atingido.' },
+        { status: 400 }
+      );
+    }
+
     // Validação: não permitir o mesmo aluno na mesma escola
     const alunoJaInscrito = await Inscricao.findOne({ nomeAluno, escola });
     if (alunoJaInscrito) {
@@ -94,6 +103,20 @@ export async function GET(request: NextRequest) {
 
     const searchParams = request.nextUrl.searchParams;
     const numeroInscricao = searchParams.get('id');
+    const checkVagas = searchParams.get('vagas');
+
+    // Verificar status das vagas
+    if (checkVagas === 'true') {
+      const totalInscricoes = await Inscricao.countDocuments();
+      const vagasDisponiveis = Math.max(0, 50 - totalInscricoes);
+      
+      return NextResponse.json({
+        totalInscricoes,
+        vagasDisponiveis,
+        limite: 50,
+        vagasEsgotadas: vagasDisponiveis === 0
+      });
+    }
 
     if (numeroInscricao) {
       const inscricao = await Inscricao.findOne({ numeroInscricao });

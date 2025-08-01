@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 const escolas = [
@@ -38,8 +38,34 @@ export default function Home() {
   });
   const [loading, setLoading] = useState(false);
   const [useMockApi, setUseMockApi] = useState(false);
+  const [vagasInfo, setVagasInfo] = useState({
+    totalInscricoes: 0,
+    vagasDisponiveis: 50,
+    limite: 50,
+    vagasEsgotadas: false,
+  });
+  const [loadingVagas, setLoadingVagas] = useState(true);
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [showEscolaOutra, setShowEscolaOutra] = useState(false);
+
+  // Buscar informações sobre vagas disponíveis
+  const buscarInfoVagas = async () => {
+    try {
+      const response = await fetch('/api/inscricoes?vagas=true');
+      if (response.ok) {
+        const data = await response.json();
+        setVagasInfo(data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar informações de vagas:', error);
+    } finally {
+      setLoadingVagas(false);
+    }
+  };
+
+  useEffect(() => {
+    buscarInfoVagas();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -67,6 +93,12 @@ export default function Home() {
     // Validação customizada para o checkbox de autorização
     if (!formData.autorizacaoImagem) {
       alert('⚠️ Por favor, marque a caixa de autorização de uso de imagem para prosseguir com a inscrição.');
+      return;
+    }
+    
+    // Verificar se ainda há vagas disponíveis
+    if (vagasInfo.vagasEsgotadas) {
+      alert('❌ Não há mais vagas disponíveis. O limite de 50 inscrições foi atingido.');
       return;
     }
     
@@ -141,6 +173,34 @@ export default function Home() {
           <h1 className="text-5xl font-bold text-custom-pink mb-8 text-center uppercase font-title">
             Festival de Escalada Escolar
           </h1>
+
+          {/* Informações sobre vagas disponíveis */}
+          <div className="mb-6 p-4 rounded-2xl bg-white/80 backdrop-blur-sm">
+            {loadingVagas ? (
+              <div className="text-center text-gray-600">
+                <span>Carregando informações de vagas...</span>
+              </div>
+            ) : (
+              <div className="text-center">
+                {vagasInfo.vagasEsgotadas ? (
+                  <div className="flex items-center justify-center space-x-2 text-red-600 font-bold">
+                    <span className="text-2xl">❌</span>
+                    <span className="text-lg">VAGAS ESGOTADAS</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center space-x-2 text-green-600 font-bold">
+                    <span className="text-2xl">✅</span>
+                    <span className="text-lg">
+                      {vagasInfo.vagasDisponiveis} {vagasInfo.vagasDisponiveis === 1 ? 'VAGA DISPONÍVEL' : 'VAGAS DISPONÍVEIS'}
+                    </span>
+                  </div>
+                )}
+                <div className="text-sm text-gray-600 mt-1">
+                  {vagasInfo.totalInscricoes} de {vagasInfo.limite} inscrições realizadas
+                </div>
+              </div>
+            )}
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-6" lang="pt-BR">
             <div>
@@ -321,10 +381,10 @@ export default function Home() {
               <div className="flex-grow flex justify-center">
                 <button
                   type="submit"
-                  disabled={loading || !formData.autorizacaoImagem}
+                  disabled={loading || !formData.autorizacaoImagem || vagasInfo.vagasEsgotadas}
                   className="w-2/3 flex justify-center py-3 px-6 border-2 border-custom-orange rounded-full shadow-lg text-base font-bold text-gray-900 bg-custom-orange hover:bg-custom-orange focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase"
                 >
-                  {loading ? 'Processando...' : 'Continuar'}
+                  {loading ? 'Processando...' : vagasInfo.vagasEsgotadas ? 'Vagas Esgotadas' : 'Continuar'}
                 </button>
               </div>
               <div className="w-16 h-16 flex-shrink-0">

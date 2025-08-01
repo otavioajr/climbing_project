@@ -238,7 +238,7 @@ export default function Admin() {
         </div>
 
         {/* Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-900 uppercase">Total de Inscrições</h3>
             <p className="text-2xl font-bold text-gray-900">{inscricoes.length}</p>
@@ -246,6 +246,16 @@ export default function Admin() {
           <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-900 uppercase">Pagamentos Confirmados</h3>
             <p className="text-2xl font-bold text-gray-900">{inscricoes.filter(i => i.status === 'pago').length}</p>
+          </div>
+          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+            <h3 className="text-sm font-medium text-gray-900 uppercase">Vagas Disponíveis</h3>
+            <p className="text-2xl font-bold text-gray-900">{Math.max(0, 50 - inscricoes.length)}</p>
+          </div>
+          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+            <h3 className="text-sm font-medium text-gray-900 uppercase">Status das Vagas</h3>
+            <p className={`text-lg font-bold ${inscricoes.length >= 50 ? 'text-red-600' : 'text-green-600'}`}>
+              {inscricoes.length >= 50 ? 'ESGOTADAS' : 'DISPONÍVEIS'}
+            </p>
           </div>
         </div>
 
