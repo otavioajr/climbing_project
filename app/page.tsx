@@ -21,7 +21,21 @@ const escolas = [
   'Outra',
 ];
 
-const tamanhosCamiseta = ['PP', 'P', 'M', 'G', 'GG', '3G', '4G', '5G'];
+const tamanhosCamiseta = [
+  '4 (Infantil)', 
+  '6 (Infantil)', 
+  '8 (Infantil)', 
+  '10 (Infantil)', 
+  '12 (Infantil)',
+  'PP (Adulto)', 
+  'P (Adulto)', 
+  'M (Adulto)', 
+  'G (Adulto)', 
+  'GG (Adulto)', 
+  '3G (Adulto)', 
+  '4G (Adulto)', 
+  '5G (Adulto)'
+];
 
 export default function Home() {
   const router = useRouter();
@@ -47,6 +61,7 @@ export default function Home() {
   const [loadingVagas, setLoadingVagas] = useState(true);
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [showEscolaOutra, setShowEscolaOutra] = useState(false);
+  const [tipoTabelaMedidas, setTipoTabelaMedidas] = useState<'infantil' | 'adulto'>('adulto');
 
   // Buscar informações sobre vagas disponíveis
   const buscarInfoVagas = async () => {
@@ -83,6 +98,15 @@ export default function Home() {
       } else {
         setShowEscolaOutra(false);
         setFormData(prev => ({ ...prev, escolaOutra: '' }));
+      }
+    }
+
+    // Detectar tipo de camiseta para mostrar tabela correta
+    if (name === 'tamanhoCamiseta') {
+      if (value.includes('Infantil')) {
+        setTipoTabelaMedidas('infantil');
+      } else if (value.includes('Adulto')) {
+        setTipoTabelaMedidas('adulto');
       }
     }
   };
@@ -195,9 +219,6 @@ export default function Home() {
                     </span>
                   </div>
                 )}
-                <div className="text-sm text-gray-600 mt-1">
-                  {vagasInfo.totalInscricoes} de {vagasInfo.limite} inscrições realizadas
-                </div>
               </div>
             )}
           </div>
@@ -396,12 +417,23 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Vagas restantes - Minimalista */}
+            <div className="text-center mt-3">
+              {!loadingVagas && !vagasInfo.vagasEsgotadas && (
+                <div className="text-xs text-gray-500 font-light">
+                  {vagasInfo.vagasDisponiveis} {vagasInfo.vagasDisponiveis === 1 ? 'vaga restante' : 'vagas restantes'}
+                </div>
+              )}
+            </div>
+
             {/* Popup da tabela de medidas */}
             {showSizeChart && (
               <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50">
                 <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="p-6 rounded-lg shadow-2xl max-w-lg mx-auto border border-custom-yellow backdrop-blur-sm">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900 uppercase">Tabela de Medidas - Camiseta Unissex</h3>
+                    <h3 className="text-lg font-medium text-gray-900 uppercase">
+                      Tabela de Medidas - {tipoTabelaMedidas === 'infantil' ? 'Infantil' : 'Adulto'}
+                    </h3>
                     <button 
                       type="button" 
                       onClick={() => setShowSizeChart(false)}
@@ -412,11 +444,37 @@ export default function Home() {
                       </svg>
                     </button>
                   </div>
+
+                  {/* Botões para alternar entre tabelas */}
+                  <div className="flex mb-4 bg-white/20 rounded-lg p-1">
+                    <button
+                      type="button"
+                      onClick={() => setTipoTabelaMedidas('infantil')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        tipoTabelaMedidas === 'infantil'
+                          ? 'bg-custom-yellow text-gray-900'
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      Infantil (4-12)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTipoTabelaMedidas('adulto')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                        tipoTabelaMedidas === 'adulto'
+                          ? 'bg-custom-yellow text-gray-900'
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      Adulto (PP-5G)
+                    </button>
+                  </div>
                   
                   <div className="flex justify-center">
                     <img 
-                      src="/images/tabela-medidas.jpg" 
-                      alt="Tabela de medidas de camiseta unissex"
+                      src={`/images/tabela-medidas-${tipoTabelaMedidas}.jpg`}
+                      alt={`Tabela de medidas ${tipoTabelaMedidas}`}
                       className="max-w-full h-auto"
                     />
                   </div>

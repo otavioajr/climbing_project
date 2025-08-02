@@ -19,7 +19,7 @@ interface Inscricao {
 const inscricoes: Inscricao[] = [];
 
 function gerarNumeroInscricao() {
-  return Math.random().toString(36).substring(2, 9).toUpperCase();
+  return (inscricoes.length + 1).toString();
 }
 
 export async function POST(request: NextRequest) {

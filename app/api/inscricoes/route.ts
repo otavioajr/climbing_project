@@ -13,8 +13,8 @@ async function gerarNumeroInscricaoSequencial() {
     proximoNumero = ultimoNumero + 1;
   }
   
-  // Retorna com padding de zeros à esquerda
-  return proximoNumero.toString().padStart(4, '0');
+  // Retorna apenas o número sem zeros à esquerda
+  return proximoNumero.toString();
 }
 
 export async function POST(request: NextRequest) {
