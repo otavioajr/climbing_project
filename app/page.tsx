@@ -62,6 +62,16 @@ export default function Home() {
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [showEscolaOutra, setShowEscolaOutra] = useState(false);
   const [tipoTabelaMedidas, setTipoTabelaMedidas] = useState<'infantil' | 'adulto'>('adulto');
+  const [diasRestantes, setDiasRestantes] = useState(0);
+
+  // Calcular dias restantes até 20/08/2025
+  const calcularDiasRestantes = () => {
+    const hoje = new Date();
+    const dataLimite = new Date('2025-08-20');
+    const diffTime = dataLimite.getTime() - hoje.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, diffDays); // Não deixar ficar negativo
+  };
 
   // Buscar informações sobre vagas disponíveis
   const buscarInfoVagas = async () => {
@@ -80,6 +90,16 @@ export default function Home() {
 
   useEffect(() => {
     buscarInfoVagas();
+    
+    // Calcular dias restantes inicialmente
+    setDiasRestantes(calcularDiasRestantes());
+    
+    // Atualizar dias restantes a cada minuto (para ser mais preciso)
+    const interval = setInterval(() => {
+      setDiasRestantes(calcularDiasRestantes());
+    }, 60000); // 60 segundos
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -194,9 +214,25 @@ export default function Home() {
             </div>
           </div>
           
-          <h1 className="text-5xl font-bold text-custom-pink mb-8 text-center uppercase font-title">
+          <h1 className="text-5xl font-bold text-custom-pink mb-2 text-center uppercase font-title">
             Festival de Escalada Escolar
           </h1>
+
+          {/* Informações de data e countdown */}
+          <div className="text-center mb-4">
+            <div className="text-lg font-semibold text-gray-800 mb-1">
+              Inscrições até dia 20/08/2025
+            </div>
+            <div className="text-2xl font-bold text-custom-orange">
+              {diasRestantes === 0 ? (
+                <span className="text-red-600">⏰ ÚLTIMO DIA!</span>
+              ) : diasRestantes === 1 ? (
+                <span>⏰ Falta 1 dia</span>
+              ) : (
+                <span>⏰ Faltam {diasRestantes} dias</span>
+              )}
+            </div>
+          </div>
 
           {/* Informações sobre vagas disponíveis */}
           <div className="mb-6 p-4 rounded-2xl bg-white/80 backdrop-blur-sm">

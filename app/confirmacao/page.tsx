@@ -5,8 +5,6 @@ import './config';
 
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { QRCode } from 'react-qrcode';
-import { generatePixCode } from '@/utils/generatePix';
 
 interface Inscricao {
   numeroInscricao: string;
@@ -22,22 +20,14 @@ function ConfirmacaoContent() {
   const [inscricao, setInscricao] = useState<Inscricao | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Informações PIX (você deve substituir com as suas)
-  const pixKey = process.env.NEXT_PUBLIC_PIX_KEY || 'email@exemplo.com';
-  const pixName = process.env.NEXT_PUBLIC_PIX_NAME || 'Nome do Recebedor';
-  const pixCity = process.env.NEXT_PUBLIC_PIX_CITY || 'São Paulo';
-  const pixValue = 300; // Valor da inscrição em reais
-  const preGeneratedPixCode = process.env.NEXT_PUBLIC_PIX_CODE || ''; // Código PIX pré-gerado
+  // Código PIX fixo fornecido
+  const pixCodeFixo = '00020126580014BR.GOV.BCB.PIX0136f39933a1-6052-4885-b518-e2feb47658fd5204000053039865406300.005802BR592547.334.443 LEONARDO NEGRE6009SAO PAULO61080540900062240520BZuJUrxwl09SLW6kwykp63046EFE';
   
-  // Gerar código PIX copia e cola válido
-  const pixCode = inscricao ? generatePixCode({
-    pixKey: pixKey,
-    merchantName: pixName,
-    merchantCity: pixCity,
-    amount: pixValue,
-    txid: inscricao.numeroInscricao,
-    preGeneratedCode: preGeneratedPixCode
-  }) : '';
+  // Link para pagamento com cartão
+  const linkCartao = 'https://checkout.nubank.com.br/Em8L4gsG6Rkwykp';
+  
+  // Valor da inscrição
+  const pixValue = 300;
 
   const fetchInscricao = useCallback(async () => {
     if (!numeroInscricao) {
@@ -73,7 +63,7 @@ function ConfirmacaoContent() {
   }, [numeroInscricao, fetchInscricao]);
 
   const copiarPixCode = () => {
-    navigator.clipboard.writeText(pixCode);
+    navigator.clipboard.writeText(pixCodeFixo);
     alert('Código PIX copiado para a área de transferência!');
   };
 
@@ -134,7 +124,13 @@ function ConfirmacaoContent() {
               <div className="text-center">
                 <h3 className="text-lg font-medium text-gray-900 mb-4 uppercase">QR Code PIX</h3>
                 <div className="bg-white p-4 rounded-2xl border inline-block">
-                  <QRCode value={pixCode} size={200} />
+                  <img 
+                    src="/images/qr-code.png" 
+                    alt="QR Code PIX" 
+                    width={200} 
+                    height={200}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <p className="text-sm text-gray-900 mt-2">
                   Escaneie o código com seu app de pagamento
@@ -144,7 +140,7 @@ function ConfirmacaoContent() {
                               <div>
                 <h3 className="text-lg font-medium text-gray-900 mb-4 uppercase">PIX Copia e Cola</h3>
                 <div className="bg-custom-yellow p-4 rounded-2xl text-sm font-mono text-gray-900 whitespace-pre-wrap overflow-auto max-h-64 break-words break-all">
-                  {pixCode}
+                  {pixCodeFixo}
                 </div>
                 <button
                   onClick={copiarPixCode}
@@ -162,6 +158,29 @@ function ConfirmacaoContent() {
               <div className="mt-4 bg-custom-yellow border border-custom-yellow rounded-2xl p-4 inline-block">
                 <p className="text-sm text-gray-900">
                   <strong>Importante:</strong> A inscrição só é realizada mediante ao pagamento, aguarde a confirmação.
+                </p>
+              </div>
+            </div>
+
+            {/* Seção de pagamento com cartão */}
+            <div className="mt-8 text-center border-t border-yellow-400 pt-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4 uppercase">
+                Pagamento com Cartão de Crédito
+              </h3>
+              <div className="bg-custom-pink bg-opacity-20 rounded-2xl p-4 inline-block">
+                <p className="text-sm text-gray-900 mb-3">
+                  Prefere pagar com cartão de crédito?
+                </p>
+                <a
+                  href={linkCartao}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-custom-pink text-white font-bold rounded-full border-2 border-custom-pink hover:bg-opacity-90 transition duration-200 uppercase"
+                >
+                  💳 Pagar com Cartão
+                </a>
+                <p className="text-xs text-gray-700 mt-2">
+                  Link seguro do Nubank
                 </p>
               </div>
             </div>
