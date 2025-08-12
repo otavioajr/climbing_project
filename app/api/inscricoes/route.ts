@@ -4,14 +4,18 @@ import Inscricao from '@/models/Inscricao';
 
 // Função para gerar número de inscrição sequencial simples
 async function gerarNumeroInscricaoSequencial() {
-  // Buscar a última inscrição para obter o próximo número
-  const ultimaInscricao = await Inscricao.findOne({}, {}, { sort: { numeroInscricao: -1 } });
+  // Buscar todas as inscrições e encontrar o maior número
+  const inscricoes = await Inscricao.find({}, { numeroInscricao: 1 });
   
-  let proximoNumero = 1;
-  if (ultimaInscricao) {
-    const ultimoNumero = parseInt(ultimaInscricao.numeroInscricao);
-    proximoNumero = ultimoNumero + 1;
+  let maiorNumero = 0;
+  for (const inscricao of inscricoes) {
+    const numero = parseInt(inscricao.numeroInscricao);
+    if (numero > maiorNumero) {
+      maiorNumero = numero;
+    }
   }
+  
+  const proximoNumero = maiorNumero + 1;
   
   // Retorna apenas o número sem zeros à esquerda
   return proximoNumero.toString();
