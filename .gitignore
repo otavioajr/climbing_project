@@ -47,4 +47,8 @@ Thumbs.db
 *.swp
 *.swo
 *.swn
-*.bak 
+*.bak
+
+# Arquivos de teste e log
+server.log
+test-api.sh 
