@@ -76,10 +76,15 @@ export default function Home() {
   // Buscar informações sobre vagas disponíveis
   const buscarInfoVagas = async () => {
     try {
-      const response = await fetch('/api/inscricoes?vagas=true');
+      const response = await fetch('/api/vagas');
       if (response.ok) {
         const data = await response.json();
-        setVagasInfo(data);
+        setVagasInfo({
+          totalInscricoes: data.totalInscricoes,
+          vagasDisponiveis: data.vagasDisponiveis,
+          limite: data.limiteVagas,
+          vagasEsgotadas: data.lotado,
+        });
       }
     } catch (error) {
       console.error('Erro ao buscar informações de vagas:', error);

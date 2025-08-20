@@ -29,9 +29,24 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  
+  // Estados para configurações
+  const [showConfig, setShowConfig] = useState(false);
+  const [limiteVagas, setLimiteVagas] = useState(50);
+  const [loadingConfig, setLoadingConfig] = useState(false);
+  
+  // Estados para informações de vagas
+  const [vagasInfo, setVagasInfo] = useState<{
+    totalInscricoes: number;
+    vagasDisponiveis: number;
+    limite: number;
+    lotado: boolean;
+  } | null>(null);
 
   useEffect(() => {
     fetchInscricoes();
+    fetchConfiguracoes();
+    fetchVagasInfo();
   }, []);
 
   const fetchInscricoes = async () => {
@@ -46,6 +61,82 @@ export default function Admin() {
       console.error('Erro ao buscar inscrições:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Buscar informações de vagas
+  const fetchVagasInfo = async () => {
+    try {
+      const response = await fetch('/api/vagas');
+      if (response.ok) {
+        const data = await response.json();
+        setVagasInfo({
+          totalInscricoes: data.totalInscricoes,
+          vagasDisponiveis: data.vagasDisponiveis,
+          limite: data.limiteVagas,
+          lotado: data.lotado,
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao buscar informações de vagas:', error);
+    }
+  };
+
+  // Buscar configurações atuais
+  const fetchConfiguracoes = async () => {
+    try {
+      const response = await fetch('/api/config');
+      const data = await response.json();
+      
+      if (response.ok) {
+        setLimiteVagas(data.limite_vagas?.valor || 50);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar configurações:', error);
+    }
+  };
+
+  // Salvar configuração de limite de vagas
+  const salvarLimiteVagas = async () => {
+    if (limiteVagas < 1) {
+      alert('O limite de vagas deve ser maior que 0');
+      return;
+    }
+
+    setLoadingConfig(true);
+    try {
+      console.log('Salvando limite de vagas:', limiteVagas);
+      
+      const response = await fetch('/api/config', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chave: 'limite_vagas',
+          valor: limiteVagas,
+          descricao: 'Número máximo de inscrições permitidas no sistema'
+        }),
+      });
+
+      const data = await response.json();
+      console.log('Resposta da API:', data);
+
+      if (response.ok) {
+        alert(`Limite de vagas atualizado com sucesso para ${limiteVagas}!`);
+        setShowConfig(false);
+        // Atualizar a lista de inscrições para refletir as mudanças
+        fetchInscricoes();
+        // Atualizar informações de vagas
+        fetchVagasInfo();
+      } else {
+        alert(`Erro ao atualizar limite de vagas: ${data.error || 'Erro desconhecido'}`);
+      }
+    } catch (error) {
+      console.error('Erro ao salvar configuração:', error);
+      alert('Erro ao salvar configuração');
+    } finally {
+      setLoadingConfig(false);
     }
   };
 
@@ -234,28 +325,37 @@ export default function Admin() {
               </svg>
               Exportar
             </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowConfig(true);
+              }}
+              type="button"
+              className="bg-custom-pink hover:bg-custom-pink text-white font-bold py-2 px-4 rounded-full border-2 border-custom-pink flex items-center uppercase"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Configurações
+            </button>
           </div>
         </div>
 
         {/* Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-900 uppercase">Total de Inscrições</h3>
-            <p className="text-2xl font-bold text-gray-900">{inscricoes.length}</p>
+            <p className="text-2xl font-bold text-gray-900">{vagasInfo?.totalInscricoes || inscricoes.length}</p>
           </div>
-          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+          <div className="bg-custom-orange backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
             <h3 className="text-sm font-medium text-gray-900 uppercase">Pagamentos Confirmados</h3>
             <p className="text-2xl font-bold text-gray-900">{inscricoes.filter(i => i.status === 'pago').length}</p>
           </div>
-          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-900 uppercase">Vagas Disponíveis</h3>
-            <p className="text-2xl font-bold text-gray-900">{Math.max(0, 50 - inscricoes.length)}</p>
-          </div>
-          <div className="bg-custom-yellow backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-900 uppercase">Status das Vagas</h3>
-            <p className={`text-lg font-bold ${inscricoes.length >= 50 ? 'text-red-600' : 'text-green-600'}`}>
-              {inscricoes.length >= 50 ? 'ESGOTADAS' : 'DISPONÍVEIS'}
-            </p>
+          <div className="bg-custom-pink backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-lg p-6">
+            <h3 className="text-sm font-medium text-white uppercase">Vagas Disponíveis</h3>
+            <p className="text-2xl font-bold text-white">{vagasInfo?.vagasDisponiveis ?? Math.max(0, (vagasInfo?.limite || 50) - inscricoes.length)}</p>
           </div>
         </div>
 
@@ -435,6 +535,68 @@ export default function Admin() {
                   className="px-4 py-2 bg-orange-500 text-white text-base font-bold rounded-full flex-1 shadow-sm hover:bg-orange-600 focus:outline-none border-2 border-orange-600 uppercase"
                 >
                   Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Configurações */}
+      {showConfig && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+          <div style={{backgroundColor: 'rgba(82, 230, 31, 0.6)'}} className="relative top-20 mx-auto p-5 border-2 border-custom-yellow w-96 shadow-2xl rounded-2xl backdrop-blur-sm">
+            <div className="mt-3">
+              <h3 className="text-lg leading-6 font-bold text-pink-600 mb-4 uppercase text-center">
+                Configurações do Sistema
+              </h3>
+              <div className="bg-yellow-300 rounded-xl p-4">
+                <div className="mt-2 space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 mb-2">
+                      <strong>Limite de Vagas:</strong>
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="999"
+                      value={limiteVagas}
+                      onChange={(e) => {
+                        const valor = parseInt(e.target.value);
+                        if (!isNaN(valor) && valor > 0) {
+                          setLimiteVagas(valor);
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600 text-lg text-center font-semibold"
+                      placeholder="Ex: 50"
+                    />
+                    <p className="text-xs text-gray-700 mt-1">
+                      Número máximo de inscrições permitidas no sistema
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="items-center px-4 py-3 space-y-2 mt-4">
+                <button
+                  onClick={() => {
+                    setShowConfig(false);
+                    fetchConfiguracoes(); // Restaura valor original se cancelar
+                  }}
+                  className="px-4 py-2 bg-yellow-300 text-gray-900 text-base font-bold rounded-full w-full shadow-sm hover:bg-yellow-400 focus:outline-none border-2 border-yellow-400 uppercase"
+                  disabled={loadingConfig}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    salvarLimiteVagas();
+                  }}
+                  disabled={loadingConfig}
+                  className="px-4 py-2 bg-pink-600 text-white text-base font-bold rounded-full w-full shadow-sm hover:bg-pink-700 focus:outline-none border-2 border-pink-700 uppercase disabled:opacity-50"
+                >
+                  {loadingConfig ? 'Salvando...' : 'Salvar Configuração'}
                 </button>
               </div>
             </div>

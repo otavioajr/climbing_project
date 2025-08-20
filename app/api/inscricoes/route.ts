@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Inscricao from '@/models/Inscricao';
+import { getConfig, inicializarConfiguracoesPadrao } from '@/utils/config';
 
 // Função para gerar número de inscrição sequencial simples
 async function gerarNumeroInscricaoSequencial() {
@@ -24,6 +25,7 @@ async function gerarNumeroInscricaoSequencial() {
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
+    await inicializarConfiguracoesPadrao();
 
     const body = await request.json();
     const {
@@ -45,11 +47,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validação: verificar limite de inscrições (máximo 50)
+    // Validação: verificar limite de inscrições
+    const limiteVagas = await getConfig('limite_vagas', 50);
     const totalInscricoes = await Inscricao.countDocuments();
-    if (totalInscricoes >= 50) {
+    if (totalInscricoes >= limiteVagas) {
       return NextResponse.json(
-        { error: 'Não há mais vagas disponíveis. O limite de 50 inscrições foi atingido.' },
+        { error: `Não há mais vagas disponíveis. O limite de ${limiteVagas} inscrições foi atingido.` },
         { status: 400 }
       );
     }
